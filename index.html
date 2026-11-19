@@ -1,0 +1,809 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>500-IN-1 ARCADE | Arnaw Studios</title>
+
+<style>
+:root{
+  --bg:#090d18;
+  --panel:#111827;
+  --card:#172235;
+  --text:#f5f7ff;
+  --muted:#94a3b8;
+  --accent:#8b7cff;
+  --border:#29364b;
+  --green:#35d49a;
+}
+*{box-sizing:border-box}
+body{
+  margin:0;
+  background:var(--bg);
+  color:var(--text);
+  font-family:Arial,sans-serif;
+}
+button,input{font:inherit}
+button{cursor:pointer}
+header{
+  padding:17px 4%;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  flex-wrap:wrap;
+  gap:15px;
+  background:#0d1423;
+  border-bottom:1px solid var(--border);
+}
+.brand{display:flex;align-items:center;gap:12px}
+.brand img{width:175px;max-width:40vw}
+.brand-icon{
+  width:43px;height:43px;border-radius:13px;
+  background:linear-gradient(135deg,#8b7cff,#24c6dc);
+  display:grid;place-items:center;font-size:21px;font-weight:900;
+}
+.brand h1{font-size:19px;margin:0}
+.brand p{font-size:11px;color:var(--muted);margin:4px 0}
+.header-stats{display:flex;gap:10px;flex-wrap:wrap}
+.pill{
+  background:var(--card);border:1px solid var(--border);
+  padding:10px 14px;border-radius:30px;font-size:13px;
+}
+.container{max-width:1450px;margin:auto;padding:25px 4%}
+.hero{
+  background:linear-gradient(120deg,#29215b,#182c50,#103e4c);
+  padding:30px;border-radius:23px;margin-bottom:25px;
+  position:relative;overflow:hidden;
+}
+.hero h2{font-size:clamp(26px,5vw,42px);margin:0 0 10px}
+.hero p{color:#d0d8ff;line-height:1.5}
+.hero .big{font-size:70px;position:absolute;right:35px;top:25px;opacity:.25}
+.btn{
+  border:0;background:var(--accent);color:white;
+  padding:11px 17px;border-radius:10px;font-weight:bold;
+}
+.btn.secondary{background:var(--card);border:1px solid var(--border)}
+.search{
+  width:100%;padding:15px;border-radius:12px;
+  border:1px solid var(--border);background:var(--panel);
+  color:var(--text);margin:15px 0;
+}
+.filters{display:flex;gap:9px;flex-wrap:wrap;margin:15px 0}
+.filter{
+  background:var(--panel);border:1px solid var(--border);
+  color:var(--text);padding:9px 14px;border-radius:25px;
+}
+.filter.active{background:var(--accent);border-color:var(--accent)}
+.section-head{
+  display:flex;justify-content:space-between;
+  align-items:center;flex-wrap:wrap;gap:10px;margin:25px 0 15px;
+}
+.section-head h2{margin:0}
+.grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(190px,1fr));
+  gap:14px;
+}
+.game{
+  background:var(--card);border:1px solid var(--border);
+  padding:16px;border-radius:16px;transition:.2s;
+  min-width:0;
+}
+.game:hover{border-color:var(--accent);transform:translateY(-3px)}
+.game-icon{font-size:34px;margin-bottom:12px}
+.game h3{font-size:15px;margin:0 0 7px}
+.game small{color:var(--muted)}
+.game-bottom{display:flex;justify-content:space-between;align-items:center;margin-top:15px;gap:7px}
+.play{
+  border:0;background:var(--accent);color:white;
+  padding:8px 13px;border-radius:8px;font-weight:bold;
+}
+.favorite{background:none;border:0;color:#ffd45e;font-size:20px}
+.modal{
+  display:none;position:fixed;inset:0;z-index:10;
+  background:#050914ed;overflow:auto;padding:20px;
+}
+.modal.show{display:flex;align-items:center;justify-content:center}
+.game-window{
+  background:var(--panel);border:1px solid var(--border);
+  border-radius:20px;padding:24px;width:100%;max-width:650px;
+  min-height:300px;position:relative;
+}
+.close{
+  position:absolute;right:18px;top:15px;
+  border:0;background:var(--card);color:white;
+  border-radius:9px;padding:8px 12px;
+}
+.game-window h2{margin:5px 55px 10px 0}
+.challenge{
+  background:var(--card);border-radius:15px;
+  padding:22px;margin:20px 0;text-align:center;
+}
+.challenge h3{font-size:25px}
+.game-input{
+  width:100%;padding:13px;background:#0b1424;
+  border:1px solid var(--border);color:white;
+  border-radius:10px;margin:8px 0;
+}
+.answer-grid{
+  display:grid;grid-template-columns:repeat(2,1fr);gap:10px;
+}
+.answer{
+  padding:17px;border:1px solid var(--border);
+  background:#0c1728;color:white;border-radius:12px;
+  font-size:20px;
+}
+.answer:hover{border-color:var(--accent)}
+.message{min-height:25px;color:var(--green);font-weight:bold}
+.muted{color:var(--muted);font-size:13px;line-height:1.5}
+.progress{
+  background:#263247;border-radius:20px;height:8px;overflow:hidden;
+  margin:12px 0;
+}
+.progress div{height:100%;background:var(--green);width:0%;transition:.3s}
+footer{text-align:center;color:var(--muted);padding:35px;font-size:12px}
+.hidden{display:none!important}
+@media(max-width:600px){
+  .container{padding:17px 4%}
+  .hero{padding:22px}
+  .hero .big{font-size:45px;right:15px}
+  .game-window{padding:17px}
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <div class="brand">
+    <img src="arnaw-studios-logo.png"
+         alt="Arnaw Studios Interactive Lab"
+         onerror="this.style.display='none'">
+    <div class="brand-icon">A</div>
+    <div>
+      <h1>500-IN-1 ARCADE</h1>
+      <p>ARNaw STUDIOS · INTERACTIVE LAB</p>
+    </div>
+  </div>
+
+  <div class="header-stats">
+    <div class="pill">⭐ XP: <b id="xp">0</b></div>
+    <div class="pill">🏆 Wins: <b id="wins">0</b></div>
+    <div class="pill">🎮 Games: 500</div>
+  </div>
+</header>
+
+<div class="container">
+
+  <section class="hero">
+    <div class="big">🎮</div>
+    <h2>THE ULTIMATE ARCADE.</h2>
+    <p>500 games. 10 categories. Endless challenges.<br>
+       Your gaming universe starts here.</p>
+    <button class="btn" onclick="document.getElementById('gameGrid').scrollIntoView({behavior:'smooth'})">
+      Explore Games →
+    </button>
+  </section>
+
+  <div class="section-head">
+    <h2>🎯 Game Library</h2>
+    <span class="muted" id="resultCount">500 games available</span>
+  </div>
+
+  <input class="search" id="search" placeholder="🔎 Search all 500 games...">
+
+  <div class="filters" id="filters"></div>
+
+  <div class="section-head">
+    <h2 id="categoryTitle">All Games</h2>
+    <button class="btn secondary" id="favoritesButton">⭐ Favourites</button>
+  </div>
+
+  <div class="grid" id="gameGrid"></div>
+
+  <div style="text-align:center;margin:30px">
+    <button class="btn secondary" id="loadMore">Load more games</button>
+  </div>
+
+</div>
+
+<div class="modal" id="modal">
+  <div class="game-window">
+    <button class="close" onclick="closeGame()">✕</button>
+    <h2 id="gameTitle">Game</h2>
+    <p class="muted" id="gameDescription">Challenge yourself!</p>
+
+    <div class="progress"><div id="gameProgress"></div></div>
+    <p class="muted" id="roundLabel">Round 1</p>
+
+    <div class="challenge" id="challenge"></div>
+
+    <div class="message" id="message" aria-live="polite"></div>
+
+    <button class="btn" id="restartButton" onclick="startGame()">
+      Restart game
+    </button>
+  </div>
+</div>
+
+<footer>
+  © 2026 Arnaw Studios · Interactive Lab<br>
+  WE ARE NOT GOING TO STOP 🔥
+</footer>
+
+<script>
+// ==========================================
+// STORAGE
+// ==========================================
+
+const saved = JSON.parse(localStorage.getItem("arcadeData") || "{}");
+
+let xp = saved.xp || 0;
+let wins = saved.wins || 0;
+let favorites = saved.favorites || [];
+let completed = saved.completed || [];
+
+function saveData(){
+  localStorage.setItem("arcadeData",JSON.stringify({
+    xp,wins,favorites,completed
+  }));
+  updateStats();
+}
+
+function updateStats(){
+  document.getElementById("xp").textContent=xp;
+  document.getElementById("wins").textContent=wins;
+}
+
+// ==========================================
+// GAME CATALOGUE: 10 × 50 = 500
+// ==========================================
+
+const categories = [
+  {id:"tap",name:"Tap Rush",icon:"⚡"},
+  {id:"memory",name:"Memory",icon:"🧠"},
+  {id:"math",name:"Math Sprint",icon:"➗"},
+  {id:"word",name:"Word Scramble",icon:"🔤"},
+  {id:"color",name:"Color Match",icon:"🎨"},
+  {id:"sequence",name:"Number Sequence",icon:"🔢"},
+  {id:"reflex",name:"Reflex Test",icon:"🚀"},
+  {id:"pattern",name:"Pattern Master",icon:"🟪"},
+  {id:"higher",name:"Higher or Lower",icon:"📈"},
+  {id:"grid",name:"Find the Target",icon:"🔍"}
+];
+
+const titles = {
+ tap:["Turbo Tap","Click Storm","Rapid Fingers","Tap Challenge","Button Blitz"],
+ memory:["Memory Master","Brain Recall","Flash Memory","Mind Trainer","Memory Rush"],
+ math:["Number Ninja","Math Master","Quick Calculator","Brain Maths","Equation Rush"],
+ word:["Word Wizard","Letter Shuffle","Word Builder","Vocabulary Quest","Word Hunter"],
+ color:["Color Clash","Colour Genius","Rainbow Rush","Color Match","Visual Sprint"],
+ sequence:["Sequence Solver","Number Logic","Pattern Numbers","Next Number","Logic Ladder"],
+ reflex:["Reaction Hero","Lightning Reflex","Instant Reaction","Speed Click","Reflex Arena"],
+ pattern:["Pattern Puzzle","Shape Memory","Pattern Genius","Grid Memory","Visual Logic"],
+ higher:["Number Hunter","Higher or Lower","Guess the Number","Number Detective","Secret Number"],
+ grid:["Target Finder","Hidden Object","Emoji Hunter","Spot the Symbol","Grid Detective"]
+};
+
+let games=[];
+
+categories.forEach((cat,c)=>{
+  for(let i=1;i<=50;i++){
+    const variation=(i-1)%5;
+    games.push({
+      id:cat.id+"-"+i,
+      category:cat.id,
+      title:titles[cat.id][variation]+" "+String(i).padStart(2,"0"),
+      icon:cat.icon,
+      difficulty:Math.min(5,Math.ceil(i/10)),
+      number:i
+    });
+  }
+});
+
+// ==========================================
+// LIBRARY
+// ==========================================
+
+let currentCategory="all";
+let showFavorites=false;
+let visibleCount=50;
+
+const grid=document.getElementById("gameGrid");
+
+function renderFilters(){
+  const box=document.getElementById("filters");
+
+  const all=document.createElement("button");
+  all.className="filter active";
+  all.textContent="All 500";
+  all.onclick=()=>selectCategory("all");
+  box.appendChild(all);
+
+  categories.forEach(cat=>{
+    const b=document.createElement("button");
+    b.className="filter";
+    b.textContent=cat.icon+" "+cat.name;
+    b.onclick=()=>selectCategory(cat.id);
+    box.appendChild(b);
+  });
+}
+
+function selectCategory(id){
+  currentCategory=id;
+  showFavorites=false;
+  visibleCount=50;
+  document.querySelectorAll(".filter").forEach(b=>b.classList.remove("active"));
+
+  const buttons=[...document.querySelectorAll(".filter")];
+  const index=id==="all"?0:categories.findIndex(c=>c.id===id)+1;
+  if(buttons[index])buttons[index].classList.add("active");
+
+  document.getElementById("categoryTitle").textContent=
+    id==="all"?"All Games":categories.find(c=>c.id===id).name;
+
+  renderGames();
+}
+
+function renderGames(){
+  const query=document.getElementById("search").value.toLowerCase();
+
+  let list=games.filter(g=>
+    (currentCategory==="all"||g.category===currentCategory)&&
+    g.title.toLowerCase().includes(query)
+  );
+
+  if(showFavorites)list=list.filter(g=>favorites.includes(g.id));
+
+  document.getElementById("resultCount").textContent=
+    list.length+" games available";
+
+  grid.innerHTML="";
+
+  list.slice(0,visibleCount).forEach(game=>{
+    const card=document.createElement("div");
+    card.className="game";
+
+    const isFav=favorites.includes(game.id);
+
+    card.innerHTML=`
+      <div class="game-icon">${game.icon}</div>
+      <h3>${game.title}</h3>
+      <small>${categories.find(c=>c.id===game.category).name}</small>
+      <div class="game-bottom">
+        <button class="play">PLAY ▶</button>
+        <button class="favorite" aria-label="Toggle favourite">${isFav?"★":"☆"}</button>
+      </div>
+    `;
+
+    card.querySelector(".play").onclick=()=>openGame(game);
+
+    card.querySelector(".favorite").onclick=()=>{
+      if(favorites.includes(game.id)){
+        favorites=favorites.filter(x=>x!==game.id);
+      }else{
+        favorites.push(game.id);
+      }
+      saveData();
+      renderGames();
+    };
+
+    grid.appendChild(card);
+  });
+
+  document.getElementById("loadMore").style.display=
+    list.length>visibleCount?"inline-block":"none";
+}
+
+document.getElementById("search").addEventListener("input",()=>{
+  visibleCount=50;
+  renderGames();
+});
+
+document.getElementById("loadMore").onclick=()=>{
+  visibleCount+=50;
+  renderGames();
+};
+
+document.getElementById("favoritesButton").onclick=()=>{
+  showFavorites=!showFavorites;
+  document.getElementById("categoryTitle").textContent=
+    showFavorites?"⭐ My Favourites":"All Games";
+  visibleCount=500;
+  renderGames();
+};
+
+// ==========================================
+// GAME ENGINE
+// ==========================================
+
+let currentGame=null;
+let round=0;
+let score=0;
+let gameData={};
+let timer=null;
+let canClick=true;
+
+const challenge=document.getElementById("challenge");
+
+function openGame(game){
+  currentGame=game;
+  document.getElementById("modal").classList.add("show");
+  startGame();
+}
+
+function closeGame(){
+  clearTimeout(timer);
+  clearInterval(timer);
+  document.getElementById("modal").classList.remove("show");
+}
+
+function startGame(){
+  if(!currentGame)return;
+
+  clearTimeout(timer);
+  clearInterval(timer);
+
+  round=0;
+  score=0;
+  canClick=true;
+  gameData={};
+
+  document.getElementById("gameTitle").textContent=currentGame.icon+" "+currentGame.title;
+  document.getElementById("gameDescription").textContent=
+    "Complete the challenges and earn XP!";
+  document.getElementById("message").textContent="";
+
+  nextRound();
+}
+
+function nextRound(){
+  round++;
+
+  document.getElementById("roundLabel").textContent=
+    "Round "+round+" / 5";
+
+  document.getElementById("gameProgress").style.width=
+    ((round-1)/5*100)+"%";
+
+  challenge.innerHTML="";
+  canClick=true;
+
+  switch(currentGame.category){
+    case "tap":tapGame();break;
+    case "memory":memoryGame();break;
+    case "math":mathGame();break;
+    case "word":wordGame();break;
+    case "color":colorGame();break;
+    case "sequence":sequenceGame();break;
+    case "reflex":reflexGame();break;
+    case "pattern":patternGame();break;
+    case "higher":higherGame();break;
+    case "grid":gridGame();break;
+  }
+}
+
+function finishRound(success){
+  if(!canClick)return;
+  canClick=false;
+
+  if(success){
+    score++;
+    document.getElementById("message").textContent="Correct! +10 points ⭐";
+  }else{
+    document.getElementById("message").textContent="Not quite! Try the next one.";
+  }
+
+  if(round>=5){
+    setTimeout(finishGame,800);
+  }else{
+    setTimeout(nextRound,850);
+  }
+}
+
+function finishGame(){
+  clearTimeout(timer);
+  clearInterval(timer);
+
+  const earned=score*10+20;
+
+  if(score>0){
+    xp+=earned;
+    wins++;
+    if(!completed.includes(currentGame.id)){
+      completed.push(currentGame.id);
+    }
+    saveData();
+  }
+
+  document.getElementById("gameProgress").style.width="100%";
+
+  challenge.innerHTML=`
+    <h3>🏆 Game Completed!</h3>
+    <p>Your score: <b>${score}/5</b></p>
+    <p>XP earned: <b>${score>0?earned:0}</b></p>
+    <button class="btn" onclick="startGame()">Play Again</button>
+  `;
+
+  document.getElementById("message").textContent=
+    score===5?"PERFECT SCORE! 🔥":"Well played!";
+}
+
+// ==========================================
+// 1. TAP RUSH
+// ==========================================
+
+function tapGame(){
+  const goal=8+currentGame.difficulty*2;
+  let count=0;
+
+  challenge.innerHTML=`
+    <h3>⚡ Tap Rush</h3>
+    <p>Tap the button ${goal} times!</p>
+    <h2 id="tapCount">0 / ${goal}</h2>
+    <button class="btn" id="tapButton" style="font-size:24px;padding:25px 45px">TAP!</button>
+  `;
+
+  document.getElementById("tapButton").onclick=()=>{
+    if(!canClick)return;
+    count++;
+    document.getElementById("tapCount").textContent=count+" / "+goal;
+    if(count>=goal)finishRound(true);
+  };
+}
+
+// ==========================================
+// 2. MEMORY
+// ==========================================
+
+function memoryGame(){
+  const emojis=["🍎","🚀","🎮","⭐","🐱","⚽"];
+  const length=2+Math.min(3,currentGame.difficulty);
+  const sequence=Array.from({length},()=>emojis[Math.floor(Math.random()*emojis.length)]);
+
+  challenge.innerHTML=`
+    <h3>🧠 Remember the sequence</h3>
+    <h2 id="memoryDisplay">${sequence.join(" ")}</h2>
+    <p class="muted">Memorise the emojis...</p>
+  `;
+
+  canClick=false;
+
+  timer=setTimeout(()=>{
+    challenge.innerHTML=`
+      <h3>Repeat the sequence!</h3>
+      <p class="muted">Enter the emojis in the same order.</p>
+      <input id="memoryInput" class="game-input" placeholder="Type emojis here">
+      <button class="btn" id="memorySubmit">Submit</button>
+    `;
+
+    canClick=true;
+
+    document.getElementById("memorySubmit").onclick=()=>{
+      const answer=document.getElementById("memoryInput").value.replace(/\s/g,"");
+      finishRound(answer===sequence.join(""));
+    };
+  },2200+currentGame.difficulty*350);
+}
+
+// ==========================================
+// 3. MATH SPRINT
+// ==========================================
+
+function mathGame(){
+  const max=10+currentGame.difficulty*10;
+  const a=Math.floor(Math.random()*max)+1;
+  const b=Math.floor(Math.random()*max)+1;
+  const operators=["+","-","×"];
+  const op=operators[Math.floor(Math.random()*operators.length)];
+
+  let answer=op==="+"?a+b:op==="-"?a-b:a*b;
+
+  challenge.innerHTML=`
+    <h3>➗ Solve this!</h3>
+    <h2>${a} ${op} ${b} = ?</h2>
+    <input type="number" class="game-input" id="mathAnswer" placeholder="Your answer">
+    <button class="btn" id="mathSubmit">Check</button>
+  `;
+
+  document.getElementById("mathSubmit").onclick=()=>{
+    finishRound(Number(document.getElementById("mathAnswer").value)===answer);
+  };
+}
+
+// ==========================================
+// 4. WORD SCRAMBLE
+// ==========================================
+
+function wordGame(){
+  const words=["PLANET","GARDEN","ROCKET","PYTHON","GUITAR","PUZZLE","SCHOOL","CASTLE","FRIEND","FLOWER"];
+  const word=words[Math.floor(Math.random()*words.length)];
+  const scrambled=word.split("").sort(()=>Math.random()-.5).join("");
+
+  challenge.innerHTML=`
+    <h3>🔤 Unscramble the word</h3>
+    <h2 style="letter-spacing:8px">${scrambled}</h2>
+    <input id="wordAnswer" class="game-input" placeholder="Enter the word">
+    <button class="btn" id="wordSubmit">Check</button>
+  `;
+
+  document.getElementById("wordSubmit").onclick=()=>{
+    finishRound(document.getElementById("wordAnswer").value.trim().toUpperCase()===word);
+  };
+}
+
+// ==========================================
+// 5. COLOR MATCH
+// ==========================================
+
+function colorGame(){
+  const colors=[
+    {name:"RED",hex:"#ef4444"},
+    {name:"BLUE",hex:"#3b82f6"},
+    {name:"GREEN",hex:"#22c55e"},
+    {name:"YELLOW",hex:"#eab308"}
+  ];
+
+  const correct=colors[Math.floor(Math.random()*colors.length)];
+
+  challenge.innerHTML=`
+    <h3>🎨 Which color is this?</h3>
+    <div style="width:100px;height:100px;border-radius:18px;background:${correct.hex};margin:20px auto"></div>
+    <div class="answer-grid">
+      ${colors.map(c=>`<button class="answer" data-color="${c.name}">${c.name}</button>`).join("")}
+    </div>
+  `;
+
+  challenge.querySelectorAll("[data-color]").forEach(b=>{
+    b.onclick=()=>finishRound(b.dataset.color===correct.name);
+  });
+}
+
+// ==========================================
+// 6. NUMBER SEQUENCE
+// ==========================================
+
+function sequenceGame(){
+  const start=Math.floor(Math.random()*15)+1;
+  const step=Math.floor(Math.random()*5)+2;
+  const numbers=[0,1,2,3].map(i=>start+i*step);
+  const answer=start+4*step;
+
+  challenge.innerHTML=`
+    <h3>🔢 Find the missing number</h3>
+    <h2>${numbers.join(" , ")} , ?</h2>
+    <input type="number" id="sequenceAnswer" class="game-input" placeholder="Next number">
+    <button class="btn" id="sequenceSubmit">Submit</button>
+  `;
+
+  document.getElementById("sequenceSubmit").onclick=()=>{
+    finishRound(Number(document.getElementById("sequenceAnswer").value)===answer);
+  };
+}
+
+// ==========================================
+// 7. REFLEX TEST
+// ==========================================
+
+function reflexGame(){
+  challenge.innerHTML=`
+    <h3>🚀 Reflex Test</h3>
+    <p>Wait until the button turns GREEN, then click!</p>
+    <button id="reflexButton" class="btn" style="padding:25px;width:100%;background:#dc3545">WAIT...</button>
+  `;
+
+  const b=document.getElementById("reflexButton");
+  canClick=false;
+
+  timer=setTimeout(()=>{
+    b.style.background="#20bb76";
+    b.textContent="CLICK NOW!";
+    canClick=true;
+    const started=Date.now();
+
+    b.onclick=()=>{
+      if(!canClick)return;
+      finishRound(Date.now()-started<3000);
+    };
+  },1000+Math.random()*2500);
+
+  b.onclick=()=>{
+    if(!canClick){
+      clearTimeout(timer);
+      finishRound(false);
+    }
+  };
+}
+
+// ==========================================
+// 8. PATTERN MASTER
+// ==========================================
+
+function patternGame(){
+  const size=9;
+  const target=Math.floor(Math.random()*size);
+
+  challenge.innerHTML=`
+    <h3>🟪 Find the special square</h3>
+    <p>Find the square containing ⭐</p>
+    <div class="answer-grid" style="grid-template-columns:repeat(3,1fr)" id="patternGrid">
+      ${Array.from({length:size},(_,i)=>
+        `<button class="answer" data-index="${i}">${i===target?"⭐":"🟦"}</button>`
+      ).join("")}
+    </div>
+  `;
+
+  challenge.querySelectorAll("[data-index]").forEach(b=>{
+    b.onclick=()=>finishRound(Number(b.dataset.index)===target);
+  });
+}
+
+// ==========================================
+// 9. HIGHER OR LOWER
+// ==========================================
+
+function higherGame(){
+  const secret=Math.floor(Math.random()*(20+currentGame.difficulty*20))+1;
+  let attempts=0;
+
+  challenge.innerHTML=`
+    <h3>📈 Guess the secret number</h3>
+    <p>Pick a number between 1 and ${20+currentGame.difficulty*20}.</p>
+    <input type="number" class="game-input" id="guessInput" placeholder="Your guess">
+    <button class="btn" id="guessSubmit">Guess</button>
+    <p id="guessHint" class="muted"></p>
+  `;
+
+  document.getElementById("guessSubmit").onclick=()=>{
+    if(!canClick)return;
+
+    const val=Number(document.getElementById("guessInput").value);
+    if(!Number.isInteger(val)||val<1)return;
+
+    attempts++;
+
+    if(val===secret){
+      finishRound(true);
+    }else{
+      document.getElementById("guessHint").textContent=
+        val>secret?"Too high! Try lower.":"Too low! Try higher.";
+
+      if(attempts>=6)finishRound(false);
+    }
+  };
+}
+
+// ==========================================
+// 10. FIND THE TARGET
+// ==========================================
+
+function gridGame(){
+  const emojis=["🍎","🍌","🍇","🍊","🍓","🍍"];
+  const target=emojis[Math.floor(Math.random()*emojis.length)];
+  const cells=Array.from({length:16},()=>emojis[Math.floor(Math.random()*emojis.length)]);
+  const position=Math.floor(Math.random()*16);
+  cells[position]=target;
+
+  challenge.innerHTML=`
+    <h3>🔍 Find ${target}</h3>
+    <div class="answer-grid" style="grid-template-columns:repeat(4,1fr)">
+      ${cells.map((e,i)=>`<button class="answer" data-position="${i}">${e}</button>`).join("")}
+    </div>
+  `;
+
+  challenge.querySelectorAll("[data-position]").forEach(b=>{
+    b.onclick=()=>finishRound(Number(b.dataset.position)===position);
+  });
+}
+
+// ==========================================
+// START
+// ==========================================
+
+renderFilters();
+renderGames();
+updateStats();
+
+</script>
+</body>
+</html>
